@@ -13,7 +13,7 @@ Since both tasks are text classification ones, we will be using a [RoBERTa spani
 3. **Perspectivist approach**. Since the organizers also provided the non-aggregated labels of the 3 annotators, we have decided to employ a perspectivist approach based on a multi-task architecture. Therefore, we will have 3 different classification heads, one for each annotator, and we will calculate the total loss as the sum of individual losses. In order to calculate the aggregated labels which will be used to compute metrics, we have aggregated them as the organizers did - i.e, majority voting and softmax normalization.
 
 The following picture sums up the three approahes:
-
+![DETEST-DIS](images/DETESTS-dis.png)
 ## Project structure
 ```
 DETEST-Dis/
@@ -29,7 +29,42 @@ DETEST-Dis/
 │   └── utils.py        #Different utils
 ```
 
+## How to run
 
+### Prepare data
+Run the notebook on [data.ipynb](notebooks/data.ipynb) in order to prepare the data.
+### Launch script
+In order to run a experiment, the following command is enough:
+
+`python run.py <RUN_NAME> <TASK>`
+
+Where <RUN_NAME> is the name of the experiment, whereas <TASK> is the task to train the model on  (`{stereotype, implicit}`).
+
+In addition to this, the script also includes the following auxiliary arguments:
+```
+--approach {hard, soft, annotators}  #Specify the learning approach, hard is default
+--lr    #Specify the learning rate
+--wd    #Weight decay
+--hfm   #HuggingFace Transformer model
+--opt {adam, adamw} #Optimizer to use for training
+--context #Flag to whether include context or not during training
+--epsilon-decay #Epsilon decay rate in the layer wise decreasing learning rate fine-tuning
+--mlp-hidden-neurons    #Neurons in the hidden layer of the MLP classifier head
+--epochs    #Number of epochs to train
+--out-neurons
+--cross-val #Number of folds to perform stratified K-Fold cross validation
+--preprocess    #Apply preprocessing to the text
+--aug   #Data augmentation by back translation
+--max-length    #Max length of the input text
+--device    #Select CUDA device to train the model on
+--test      #Test the model
+```
+### Examples
+`python run.py HardLabelStereotype stereotype --lr 5e-5` would run an experiment trained with hard labels and a learning rate of 5e-5
+
+`python run.py SoftLabelImplicit implicit --aug --approach soft` would run an experiment on the implicit task. More specifically, a model trained using the silver labels and with data augmentation.
+
+`python run.py AnnotatorStereotype stereotype --approach annotators` would run an experiment on the stereotype task using the perspectivist approach.
 
 ## Results on test set
 ### Detection of stereotypes
