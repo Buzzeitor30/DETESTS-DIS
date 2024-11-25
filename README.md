@@ -1,19 +1,24 @@
 # DETESTS-DIS
-The following repository contains the source code of my participation of the [DETEST-DIS](https://detests-dis.github.io/) shared task organized at IberLEF 2024. It is part of my final master thesis based on the detection and identification of racial and sexist stereotypes with a learning with disagreements (LeWiDi) approach. The thesis can be found on the following [link](https://riunet.upv.es/handle/10251/209997).
+This repository contains the source code for my participation in the [DETEST-DIS](https://detests-dis.github.io/) shared task organized at IberLEF 2024. It forms part of my final master's thesis, which focuses on detecting and identifying racial and sexist stereotypes using a learning with disagreements (LeWiDi) approach. You can access the thesis at this [link](https://riunet.upv.es/handle/10251/209997).
 
-The DETEST-DIS shared task is centered around the identification and detection of racial stereotypes through the LeWiDi approach. More specifically, it is centered around the presence of racial stereotypes which can be found on online comments on news.
+The DETEST-DIS shared task focuses on the identification and detection of racial stereotypes using the LeWiDi approach. Specifically, it targets racial stereotypes found in online news comments.
 
-In order to do so, it proposes the following two tasks:
-1. **Detection of stereotype**
-2. **Implicitness of the stereotype**. A novel hierarchy classification task focused on detecting whether a comment with a stereotype is implicit or not.
+To achieve this, the shared task proposes two main objectives:
+1. **Detection of stereotypes**.
+2. **Implicitness of the stereotype**: A novel hierarchical classification task designed to determine whether a comment containing a stereotype is implicit or explicit.
 
-Since both tasks are text classification ones, we will be using a [RoBERTa spanish model](https://huggingface.co/PlanTL-GOB-ES/roberta-base-bne). However, we will play around with the classification head and training procedure, resulting on three models:
-1. **Hard label approach**, in which we append a simple classification head with only 1 neuron on the output layer, training by minimizing binary cross entropy loss. This approach provides a baseline to compare the classic methodology the LeWiDi one.
-2. **Soft label approach**. Following the soft loss approach found on LeWiDi literature, we will train our model using the silver labels (normalized by softmax). In order to accomplish that, we use a classification head with two output neurons and by minimizing cross entropy loss.
-3. **Perspectivist approach**. Since the organizers also provided the non-aggregated labels of the 3 annotators, we have decided to employ a perspectivist approach based on a multi-task architecture. Therefore, we will have 3 different classification heads, one for each annotator, and we will calculate the total loss as the sum of individual losses. In order to calculate the aggregated labels which will be used to compute metrics, we have aggregated them as the organizers did - i.e, majority voting and softmax normalization.
+## Models
+Both tasks involve text classification, and we use the [RoBERTa Spanish model](https://huggingface.co/PlanTL-GOB-ES/roberta-base-bne). However, we experiment with different classification heads and training procedures, resulting in three models:
 
-The following picture sums up the three approahes:
+1. **Hard label approach**: This involves appending a simple classification head with a single neuron in the output layer, trained by minimizing binary cross-entropy loss. This approach serves as a baseline for comparing traditional methodology with the LeWiDi approach.
+
+2. **Soft label approach**: Following the soft loss approach described in LeWiDi literature, the model is trained using silver labels normalized with softmax. This method employs a classification head with two output neurons and minimizes cross-entropy loss.
+
+3. **Perspectivist approach**: Since the organizers also provided non-aggregated labels from three annotators, this approach uses a multi-task architecture with separate classification heads for each annotator. The total loss is calculated as the sum of individual losses. For evaluation, aggregated labels are derived using majority voting and softmax normalization, mirroring the organizers' method.
+
+The following diagram summarizes the three approaches:
 ![DETEST-DIS](images/DETESTS-dis.png)
+
 ## Project structure
 ```
 DETEST-Dis/
@@ -30,7 +35,9 @@ DETEST-Dis/
 ```
 
 ## How to run
-
+### Create environment
+In order to recreate the environment using conda run the following command:
+`conda env create -n <YOUR_ENV_NAME> -f environment.yaml
 ### Prepare data
 Run the notebook on [data.ipynb](notebooks/data.ipynb) in order to prepare the data.
 ### Launch script
